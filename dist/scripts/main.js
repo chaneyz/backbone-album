@@ -1,7 +1,7 @@
 $(document).ready(function() {
 	var imageFeed = new ImageCollection();
-
 	imageFeed.fetch();
+
 	var imageBuilder = _.template($('#image-template').html());
 
 	$('.add-form-btn a').on('click', function() {
@@ -19,14 +19,23 @@ $(document).ready(function() {
 			caption: $('#input-caption').val()
 		});
 
-		imageFeed.add(newImage);
-		newImage.save();
+		if(newImage.isValid()) {
+			console.log('the image is present, it can pass');
+			imageFeed.add(newImage);
+			newImage.save();
+		}
 
-		console.log(newImage)
+		else {
+			console.log('fuck you');
+			console.log(newImage.validationError);
+		}
+
+		$('#input-url').val('')
+		$('#input-caption').val('')
 	});
 
 	imageFeed.on('add', function(model) {
 		var imgCapHtml = imageBuilder(model.attributes);
-		$('#img-feed').append(imgCapHtml);
+		$('#img-feed').prepend(imgCapHtml);
 	});	
 });
